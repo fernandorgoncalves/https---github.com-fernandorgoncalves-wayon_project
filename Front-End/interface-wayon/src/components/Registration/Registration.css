@@ -1,0 +1,315 @@
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto;
+  width: min(90vw, 600px);
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.registration-form h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  color: #333;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.consult-group {
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.consult-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+  text-align: center;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.form-group label,
+.consult-group label {
+  width: 100%;
+}
+
+.form-group input,
+.consult-group input {
+  width: 100%;
+  text-align: center;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  margin: 0 auto;
+  display: block;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.consult-group input:focus {
+  outline: none;
+  border-color: #282c34;
+  box-shadow: 0 0 0 2px rgba(40, 44, 52, 0.1);
+}
+
+.date-input {
+  cursor: pointer;
+}
+
+.registration-form button {
+  width: 100%;
+  max-width: 400px;
+  padding: 14px 20px;
+  background-color: #282c34;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  transition: all 0.2s ease;
+}
+
+.registration-form button:hover:not(:disabled) {
+  background-color: #404652;
+  transform: translateY(-1px);
+}
+
+.registration-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.registration-form button .spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-message {
+  color: #d9534f;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  display: block;
+}
+
+.fee-display {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #e9ecef;
+  border-radius: 6px;
+}
+
+.fee-display label {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.fee-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.fee-error {
+  color: #dc3545 !important;
+}
+.submission-error {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1rem;
+  padding: 12px;
+  background-color: #ffebee;
+  border: 1px solid #f44336;
+  border-left: 4px solid #f44336;
+  border-radius: 6px;
+  color: #c62828;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.debug-info {
+  background-color: #f0f8ff;
+  border: 1px solid #add8e6;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.debug-info h4 {
+  margin-top: 0;
+  color: #0066cc;
+}
+
+.debug-info pre {
+  background-color: #f5f5f5;
+  padding: 0.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.error-content {
+  flex: 1;
+}
+
+.error-content details {
+  margin-top: 0.5rem;
+}
+
+.error-content summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: #8b0000;
+}
+
+.error-content details p {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.submission-error:before {
+  content: "⚠️ ";
+  margin-right: 0.5rem;
+}
+
+.retry-btn {
+  background: none;
+  border: none;
+  color: #c62828;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 4px;
+  margin-left: 8px;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.retry-btn:hover {
+  background-color: rgba(196, 40, 40, 0.1);
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .registration-form {
+    width: min(85vw, 500px);
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+  }
+}
+
+/* Smartphones */
+@media (max-width: 768px) {
+  .registration-form {
+    width: min(95vw, 400px);
+    padding: 1.5rem 1rem;
+    margin: 1rem auto;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .registration-form h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+  
+  .form-group input,
+  .consult-group input {
+    padding: 14px 12px;
+    font-size: 16px; /* Evita zoom no iOS */
+  }
+  
+  .registration-form button {
+    padding: 16px 20px;
+    font-size: 1rem;
+  }
+}
+
+/* Smartphones pequenos */
+@media (max-width: 480px) {
+  .registration-form {
+    width: 100vw;
+    margin: 0.5rem 0;
+    padding: 1rem;
+    border-radius: 0;
+    min-height: 100vh;
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
+  
+  .form-group input,
+  .consult-group input {
+    padding: 16px 12px;
+  }
+}
+
+/* Landscape em dispositivos móveis */
+@media (max-width: 768px) and (orientation: landscape) {
+  .registration-form {
+    margin: 0.5rem auto;
+    padding: 1rem;
+  }
+  
+  .registration-form h2 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+}

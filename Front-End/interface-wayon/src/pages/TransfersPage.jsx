@@ -8,6 +8,7 @@ import "./TransfersPage.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import Registration from "../components/Registration/Registration";
 
 function TransfersPage() {
   return (
@@ -24,6 +25,9 @@ function TransfersPage() {
       >
         <SwiperSlide>
           <TransferForm />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Registration />
         </SwiperSlide>
         <SwiperSlide>
           <ConsultForm />

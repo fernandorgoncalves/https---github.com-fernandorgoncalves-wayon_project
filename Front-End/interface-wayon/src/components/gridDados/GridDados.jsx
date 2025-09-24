@@ -49,7 +49,7 @@ function GridDados({ data, loading, error }) {
               <tr key={item.id}>
                 <td>{item.sourceAccount}</td>
                 <td>{item.destinationAccount}</td>
-                <td>{formatCurrency(item.transferValue)}</td>
+                <td>{formatCurrency(item.amount)}</td>
                 <td>{formatDate(item.transferDate)}</td>
                 <td>{formatDate(item.schedulingDate)}</td>
               </tr>

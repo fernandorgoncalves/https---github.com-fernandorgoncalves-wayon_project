@@ -13,7 +13,7 @@ function ConsultForm() {
     error,
   } = useQuery({
     queryKey: ["transfers"],
-    queryFn: () => getApiData("transfers"),
+    queryFn: () => getApiData("Transfers"),
   });
 
   const displayData = useMemo(() => {

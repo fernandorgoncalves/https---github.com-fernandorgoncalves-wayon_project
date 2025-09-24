@@ -1,9 +1,8 @@
+
+import { useState, useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { postApiData } from "../../services/apiServices";
 import "./TransferForm.css";
-
-//
 
 function TransferForm() {
   const [formData, setFormData] = useState({
@@ -14,26 +13,25 @@ function TransferForm() {
   });
 
   const [errors, setErrors] = useState({});
-  
+  const [/*submissionError*/, setSubmissionError] = useState(null);
 
-  const isFormValid =
-    formData.sourceAccount &&
-    formData.destinationAccount &&
-    formData.transferValue &&
-    formData.transferDate &&
-    !Object.values(errors).some(Boolean); // Garante que não há erros de validação
+  const isFormValid = useMemo(
+    () =>
+      formData.sourceAccount &&
+      formData.destinationAccount &&
+      formData.transferValue &&
+      formData.transferDate &&
+      Object.values(errors).every((error) => !error),
+    [formData, errors]
+  );
 
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    // Inclui a data de agendamento e a taxa no envio
-    mutationFn: (newTransfer) => postApiData("transfers", newTransfer),
-    onSuccess: (data) => {
-      console.log("Transferência agendada:", data);
+    mutationFn: (transferPayload) => postApiData("transfers/schedule", transferPayload),
+    onSuccess: () => {
       alert("Transferência agendada com sucesso!");
-
       queryClient.invalidateQueries({ queryKey: ["transfers"] });
-
       setFormData({
         sourceAccount: "",
         destinationAccount: "",
@@ -41,151 +39,153 @@ function TransferForm() {
         transferDate: "",
       });
       setErrors({});
-      
+      setSubmissionError(null);
     },
     onError: (err) => {
-      // Tenta extrair uma mensagem de erro mais amigável da resposta da API.
-      // A API pode retornar um objeto como { message: '...' } ou { error: '...' }.
       const apiErrorMessage =
         err.response?.data?.message || err.response?.data?.error;
-
-      const errorInfo = {
-        // Usa a mensagem da API se existir, senão a mensagem de erro padrão.
-        message: apiErrorMessage || err.message,
-        status: err.response?.status,
-        statusText: err.response?.statusText,
-        url: err.config?.url,
-        method: err.config?.method?.toUpperCase(),
-        data: err.response?.data,
-      };
-
-      console.error("Erro detalhado ao agendar transferência:", errorInfo);
       
+      const errorMessage = apiErrorMessage || err.message;
+
+      // Log detalhado para depuração no console
+      console.error("Erro detalhado ao agendar transferência:", {
+        message: errorMessage,
+        status: err.response?.status,
+        data: err.response?.data,
+      });
+
+      // Exibe um alerta para o usuário
+      alert(`Erro ao agendar a transferência: ${errorMessage}`);
+      setSubmissionError(null); // Limpa o erro de submissão anterior
     },
   });
 
-  const handleChange = (e) => {
-    let { name, value } = e.target;
-
-    if (name === "sourceAccount" || name === "destinationAccount") {
-      value = value.replace(/[^0-9]/g, "");
+  const validateField = (name, value) => {
+    let error = "";
+    switch (name) {
+      case "sourceAccount":
+      case "destinationAccount":
+        if (!/^\d{6}$/.test(value)) {
+          error = "A conta deve ter 6 dígitos numéricos.";
+        }
+        break;
+      case "transferValue":
+        if (parseFloat(value) <= 0) {
+          error = "O valor da transferência deve ser maior que zero.";
+        }
+        break;
+      case "transferDate":
+        if (!value) {
+          error = "A data da transferência é obrigatória.";
+        }
+        break;
+      default:
+        break;
     }
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-
-    if (errors[name]) {
-      setErrors((prevErrors) => ({ ...prevErrors, [name]: undefined }));
-    }
+    return error;
   };
 
-  const handleSubmit = async (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    const error = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-  
-    const newErrors = {};
+    if (!isFormValid) return;
 
-    if (!formData.sourceAccount)
-      newErrors.sourceAccount = "Conta de origem é obrigatória.";
-    if (!formData.destinationAccount)
-      newErrors.destinationAccount = "Conta de destino é obrigatória.";
-    if (!formData.transferValue)
-      newErrors.transferValue = "Valor da transferência é obrigatório.";
-    if (!formData.transferDate)
-      newErrors.transferDate = "Data da transferência é obrigatória.";
-    if (
-      formData.sourceAccount &&
-      formData.sourceAccount === formData.destinationAccount
-    ) {
-      newErrors.destinationAccount = "A conta de destino não pode ser igual à de origem.";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    const schedulingDate = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    const schedulingDate = new Date().toISOString().split("T")[0];
 
     const transferPayload = {
-      ...formData,
-      transferValue: parseFloat(formData.transferValue),
+      sourceAccount: formData.sourceAccount,
+      destinationAccount: formData.destinationAccount,
+      amount: parseFloat(formData.transferValue),
+      transferDate: formData.transferDate,
       schedulingDate: schedulingDate,
+      // ID, FEE, e CLIENT_ID são provavelmente gerenciados pelo backend.
     };
 
-    console.log("Enviando para API:", transferPayload);
     mutate(transferPayload);
   };
-
   return (
     <div className="container d-flex jcenter">
-    <div className="transfer-form">
-      <h2>Novo Agendamento</h2>
-      
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Conta de Origem:</label>
-          <input
-            type="text"
-            name="sourceAccount"
-            placeholder="XXXXXXXXXX"
-            maxLength="10"
-            value={formData.sourceAccount}
-            onChange={handleChange}
-          />
-          {errors.sourceAccount && (
-            <span className="error-message">{errors.sourceAccount}</span>
-          )}
-        </div>
+      <div className="transfer-form">
+        <h2>Novo Agendamento</h2>
 
-        <div className="form-group">
-          <label>Conta de Destino:</label>
-          <input
-            type="text"
-            name="destinationAccount"
-            placeholder="XXXXXXXXXX"
-            maxLength="10"
-            value={formData.destinationAccount}
-            onChange={handleChange}
-          />
-          {errors.destinationAccount && (
-            <span className="error-message">{errors.destinationAccount}</span>
-          )}
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Conta de Origem:</label>
+            <input
+              type="text"
+              name="sourceAccount"
+              placeholder="000000"
+              maxLength="6"
+              value={formData.sourceAccount}
+              onChange={handleChange}
+            />
+            {errors.sourceAccount && (
+              <span className="error-message">{errors.sourceAccount}</span>
+            )}
+          </div>
 
-        <div className="form-group">
-          <label>Valor da Transferência:</label>
-          <input
-            type="number"
-            name="transferValue"
-            placeholder="R$ 0,00"
-            value={formData.transferValue}
-            onChange={handleChange}
-            step="0.01"
-            min="0"
-          />
-          {errors.transferValue && (
-            <span className="error-message">{errors.transferValue}</span>
-          )}
-        </div>
+          <div className="form-group">
+            <label>Conta de Destino:</label>
+            <input
+              type="text"
+              name="destinationAccount"
+              placeholder="000000"
+              maxLength="6"
+              value={formData.destinationAccount}
+              onChange={handleChange}
+            />
+            {errors.destinationAccount && (
+              <span className="error-message">{errors.destinationAccount}</span>
+            )}
+          </div>
 
-        <div className="form-group">
-          <label>Data da Transferência:</label>
-          <input
-            type="date"
-            name="transferDate"
-            className="date-input"
-            value={formData.transferDate}
-            onChange={handleChange}
-          />
-        </div>
+          <div className="form-group">
+            <label>Valor da Transferência:</label>
+            <input
+              type="number"
+              name="transferValue"
+              placeholder="R$ 0,00"
+              step="0.01"
+              min="0.01"
+              value={formData.transferValue}
+              onChange={handleChange}
+            />
+            {errors.transferValue && (
+              <span className="error-message">{errors.transferValue}</span>
+            )}
+          </div>
 
-        <button type="submit" >
-          
-        </button>
-      </form>
-    </div>
+          <div className="form-group">
+            <label>Data da Transferência:</label>
+            <input
+              type="date"
+              name="transferDate"
+              className="date-input"
+              value={formData.transferDate}
+              onChange={handleChange}
+            />
+            {errors.transferDate && (
+              <span className="error-message">{errors.transferDate}</span>
+            )}
+          </div>
+
+          <button type="submit" disabled={!isFormValid || isPending}>
+            {isPending ? (
+              <>
+                <span className="spinner"></span> Agendando...
+              </>
+            ) : (
+              "Agendar"
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
