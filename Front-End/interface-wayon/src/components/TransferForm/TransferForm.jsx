@@ -14,7 +14,7 @@ function TransferForm() {
   });
 
   const [errors, setErrors] = useState({});
-  const [submissionError, setSubmissionError] = useState(null);
+  
 
   const isFormValid =
     formData.sourceAccount &&
@@ -41,19 +41,26 @@ function TransferForm() {
         transferDate: "",
       });
       setErrors({});
-      setSubmissionError(null);
+      
     },
     onError: (err) => {
+      // Tenta extrair uma mensagem de erro mais amigável da resposta da API.
+      // A API pode retornar um objeto como { message: '...' } ou { error: '...' }.
+      const apiErrorMessage =
+        err.response?.data?.message || err.response?.data?.error;
+
       const errorInfo = {
-        message: err.message,
+        // Usa a mensagem da API se existir, senão a mensagem de erro padrão.
+        message: apiErrorMessage || err.message,
         status: err.response?.status,
         statusText: err.response?.statusText,
         url: err.config?.url,
         method: err.config?.method?.toUpperCase(),
         data: err.response?.data,
       };
-      console.error("Erro detalhado ao agendar transferência:", err);
-      setSubmissionError(errorInfo);
+
+      console.error("Erro detalhado ao agendar transferência:", errorInfo);
+      
     },
   });
 
@@ -76,7 +83,7 @@ function TransferForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmissionError(null); // Limpa erros anteriores ao tentar novamente
+  
     const newErrors = {};
 
     if (!formData.sourceAccount)
@@ -115,21 +122,7 @@ function TransferForm() {
     <div className="container d-flex jcenter">
     <div className="transfer-form">
       <h2>Novo Agendamento</h2>
-      {submissionError && (
-        <div className="submission-error">
-          <div className="error-content">
-            <strong>Erro ao agendar:</strong> {submissionError.message}
-            <details>
-              <summary>Detalhes</summary>
-              <p>
-                Status: {submissionError.status} {submissionError.statusText}
-              </p>
-              <p>Endpoint: {submissionError.method} {submissionError.url}</p>
-              <p>Resposta: {JSON.stringify(submissionError.data)}</p>
-            </details>
-          </div>
-        </div>
-      )}
+      
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Conta de Origem:</label>
@@ -186,18 +179,10 @@ function TransferForm() {
             value={formData.transferDate}
             onChange={handleChange}
           />
-          {errors.transferDate && (
-            <span className="error-message">{errors.transferDate}</span>
-          )}
         </div>
 
-        <button type="submit" disabled={!isFormValid || isPending}>
-          {isPending ? (
-            <>
-              <span className="spinner"></span>
-              Agendando...
-            </>
-          ) : "Agendar Transferência"}
+        <button type="submit" >
+          
         </button>
       </form>
     </div>
