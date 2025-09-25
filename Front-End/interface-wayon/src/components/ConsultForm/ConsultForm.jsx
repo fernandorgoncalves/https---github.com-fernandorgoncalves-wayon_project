@@ -1,46 +1,42 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import "./ConsultForm.css";
 import GridDados from "../gridDados/GridDados";
 import { getApiData } from "../../services/apiServices";
 import { useQuery } from "@tanstack/react-query";
 
 function ConsultForm() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [showGrid, setShowGrid] = useState(false);
 
   const {
-    data: allData = [],
+    data = [],
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["transfers"],
     queryFn: () => getApiData("transfers"),
+    enabled: false, // Impede a busca automática ao carregar o componente
   });
 
-  const displayData = useMemo(() => {
-    if (!searchTerm) {
-      return allData;
-    }
-    return allData.filter((item) =>
-      item.sourceAccount.includes(searchTerm)
-    );
-  }, [allData, searchTerm]);
+  const handleConsult = () => {
+    setShowGrid(true);
+    refetch(); // Executa a busca de dados
+  };
 
   return (
-    <div className="consult-form">
-      <h2>Consulta de transferência</h2>
+    <div className="container d-flex jc-center container-consult">
+      <div className="consult-form">
+        <h2>Consultar Agendamentos</h2>
 
-      <div className="consult-group">
-        <label>Conta de Origem:</label>
-        <input
-          type="text"
-          name="sourceAccount"
-          placeholder="Digite a conta de origem"
-          maxLength="6"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="consult-group">
+          <button onClick={handleConsult} disabled={isLoading}>
+            {isLoading ? "Consultando..." : "Consultar"}
+          </button>
+        </div>
+        {showGrid && (
+          <GridDados data={data} loading={isLoading} error={error?.message} />
+        )}
       </div>
-      <GridDados data={displayData} loading={isLoading} error={error?.message} />
     </div>
   );
 }

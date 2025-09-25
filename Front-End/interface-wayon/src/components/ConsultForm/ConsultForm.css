@@ -1,3 +1,6 @@
+.container-consult{
+height: 100vh;
+}
 .consult-form {
   display: flex;
   flex-direction: column;
@@ -7,10 +10,10 @@
   padding: 2rem;
   background-color: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);  
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);  
   box-sizing: border-box;
-    overflow-x: hidden;
-  overflow-y: auto;
+  height: 60vh;
+  margin-top: 150px;
 }
 
 .consult-form h2 {
@@ -30,9 +33,8 @@
   max-width: 500px;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background-color: #fff;
+  background-color: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .consult-form label {

@@ -8,11 +8,11 @@
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: #0f0f0f; /* Nova cor para as setas (preto) */
+  color: #0f0f0f; 
   top: 50%;
-  transform: translateY(-30%);
+  transform: translateY(-40%);
   padding: 10rem;
-
+  border-radius: 10px;
 }
 
 .swiper-button-next::after,

@@ -110,7 +110,7 @@ function TransferForm() {
     mutate(transferPayload);
   };
   return (
-    <div className="container d-flex jcenter">
+    <div className="container d-flex ">
       <div className="transfer-form">
         <h2>Novo Agendamento</h2>
 
