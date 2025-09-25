@@ -5,7 +5,7 @@ Este projeto é uma aplicação full-stack para agendamento de transferências f
 ## Tecnologias Utilizadas
 
 ### Backend
-- **Java** (versão 17+)
+- **Java** (versão 11)
 - **Spring Boot**
 - **Maven**
 - **Spring Data JPA**
