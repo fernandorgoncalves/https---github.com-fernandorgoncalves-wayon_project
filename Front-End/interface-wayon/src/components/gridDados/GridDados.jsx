@@ -39,6 +39,7 @@ function GridDados({ data, loading, error }) {
             <th>Conta de Origem</th>
             <th>Conta de Destino</th>
             <th>Valor</th>
+            <th>Taxa</th>
             <th>Data da Transferência</th>
             <th>Data do Agendamento</th>
           </tr>
@@ -49,14 +50,15 @@ function GridDados({ data, loading, error }) {
               <tr key={item.id}>
                 <td>{item.sourceAccount}</td>
                 <td>{item.destinationAccount}</td>
-                <td>{formatCurrency(item.amount)}</td>
+                <td>{formatCurrency(item.transferValue)}</td>
+                <td>{formatCurrency(item.fee)}</td>
                 <td>{formatDate(item.transferDate)}</td>
                 <td>{formatDate(item.schedulingDate)}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5">Nenhuma transferência encontrada.</td>
+              <td colSpan="6">Nenhuma transferência encontrada.</td>
             </tr>
           )}
         </tbody>

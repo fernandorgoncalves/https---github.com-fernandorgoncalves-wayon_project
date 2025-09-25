@@ -13,7 +13,7 @@ function TransferForm() {
   });
 
   const [errors, setErrors] = useState({});
-  const [/*submissionError*/, setSubmissionError] = useState(null);
+  const [submissionError, setSubmissionError] = useState(null);
 
   const isFormValid = useMemo(
     () =>
@@ -28,7 +28,7 @@ function TransferForm() {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (transferPayload) => postApiData("transfers/schedule", transferPayload),
+    mutationFn: (transferPayload) => postApiData("transfers", transferPayload),
     onSuccess: () => {
       alert("Transferência agendada com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["transfers"] });
@@ -56,7 +56,7 @@ function TransferForm() {
 
       // Exibe um alerta para o usuário
       alert(`Erro ao agendar a transferência: ${errorMessage}`);
-      setSubmissionError(null); // Limpa o erro de submissão anterior
+      setSubmissionError(errorMessage); // Guarda a mensagem de erro
     },
   });
 
@@ -99,9 +99,9 @@ function TransferForm() {
     const schedulingDate = new Date().toISOString().split("T")[0];
 
     const transferPayload = {
-      sourceAccount: formData.sourceAccount,
-      destinationAccount: formData.destinationAccount,
-      amount: parseFloat(formData.transferValue),
+      sourceAccount: parseInt(formData.sourceAccount, 10),
+      destinationAccount: parseInt(formData.destinationAccount, 10),
+      transferValue: parseFloat(formData.transferValue),
       transferDate: formData.transferDate,
       schedulingDate: schedulingDate,
       // ID, FEE, e CLIENT_ID são provavelmente gerenciados pelo backend.
@@ -184,6 +184,9 @@ function TransferForm() {
               "Agendar"
             )}
           </button>
+          {submissionError && (
+            <p className="error-message submission-error">{submissionError}</p>
+          )}
         </form>
       </div>
     </div>

@@ -10,12 +10,12 @@ function Registration() {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    // Assumindo que o endpoint para cadastrar clientes seja '/clients'
-    mutationFn: (clientPayload) => postApiData("clients", clientPayload),
+    // O endpoint para cadastrar clientes/contas é '/accounts'
+    mutationFn: (clientPayload) => postApiData("accounts", clientPayload),
     onSuccess: () => {
       alert("Cliente cadastrado com sucesso!");
-      // Invalida queries relacionadas a clientes, se houver.
-      queryClient.invalidateQueries({ queryKey: ["clients"] });
+      // Invalida queries relacionadas a contas para atualizar listas, se houver.
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
       setName("");
       setError("");
     },
