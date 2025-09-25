@@ -1,13 +1,12 @@
 import { Autoplay, Mousewheel, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+
+
 import ConsultForm from "../components/ConsultForm/ConsultForm";
 import TransferForm from "../components/TransferForm/TransferForm";
 
-import "./TransfersPage.css";
-
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import "swiper/swiper-bundle.css"; // Importa todos os estilos do Swiper de uma vez
+import "./TransfersPage.css"; // Mantém seus estilos personalizados
 import Registration from "../components/Registration/Registration";
 
 function TransfersPage() {

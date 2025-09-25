@@ -2,8 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin: 2rem auto;
+  align-items: center;  
   width: min(90vw, 600px);
   padding: 2rem;
   background-color: #f9f9f9;
@@ -12,6 +11,7 @@
   box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
   overflow: hidden;
+  min-height: 500px; /* Aumenta a altura mínima do formulário */
 }
 
 .registration-form h2 {

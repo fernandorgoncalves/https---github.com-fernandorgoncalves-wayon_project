@@ -3,13 +3,16 @@
   max-width: 100vw;
   overflow: hidden;
   position: relative;
+  background-color: #e0e0e0; /* Nova cor de fundo (cinza claro) */
 }
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: #1b1a1a;
+  color: #0f0f0f; /* Nova cor para as setas (preto) */
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-30%);
+  padding: 10rem;
+
 }
 
 .swiper-button-next::after,

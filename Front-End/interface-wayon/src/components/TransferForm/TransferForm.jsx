@@ -96,16 +96,16 @@ function TransferForm() {
     e.preventDefault();
     if (!isFormValid) return;
 
-    const schedulingDate = new Date().toISOString().split("T")[0];
-
+    // Payload ajustado para enviar contas como string
     const transferPayload = {
-      sourceAccount: parseInt(formData.sourceAccount, 10),
-      destinationAccount: parseInt(formData.destinationAccount, 10),
+      sourceAccount: formData.sourceAccount,
+      destinationAccount: formData.destinationAccount,
       transferValue: parseFloat(formData.transferValue),
       transferDate: formData.transferDate,
-      schedulingDate: schedulingDate,
-      // ID, FEE, e CLIENT_ID são provavelmente gerenciados pelo backend.
     };
+
+    // Log do payload antes de enviar para a API
+    console.log("Enviando payload para agendamento:", transferPayload);
 
     mutate(transferPayload);
   };

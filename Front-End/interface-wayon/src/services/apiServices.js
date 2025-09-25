@@ -13,6 +13,19 @@ const BASE_URL = "/api";
  * @returns {Promise<any>} A resposta da API.
  */
 export async function getApiData(endpoint) {
+  try {
+    const response = await fetch(`${BASE_URL}/${endpoint}`);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: `HTTP error! status: ${response.status}` }));
+      const error = new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      error.response = { data: errorData, status: response.status };
+      throw error;
+    }
+    return response.json(); // Return the parsed JSON data
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Re-throw the error so TanStack Query can handle it
+  }
 }
 
 /**
@@ -21,4 +34,21 @@ export async function getApiData(endpoint) {
  * @returns {Promise<any>} A resposta da API.
  */
 export async function postApiData(endpoint, data) {
+  try {
+    const response = await fetch(`${BASE_URL}/${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: `HTTP error! status: ${response.status}` }));
+      const error = new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      error.response = { data: errorData, status: response.status };
+      throw error;
+    }
+    return response.json(); // Return the parsed JSON data
+  } catch (error) {
+    console.error("Error posting data:", error);
+    throw error; // Re-throw the error so TanStack Query can handle it
+  }
 }
