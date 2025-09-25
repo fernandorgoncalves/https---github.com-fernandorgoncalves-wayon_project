@@ -35,7 +35,7 @@ O repositório está organizado em duas pastas principais:
 
 ### Pré-requisitos
 
--   Java JDK 17 ou superior
+-   Java JDK 11 ou superior
 -   Maven 3.x
 -   Node.js 18 ou superior
 -   npm (ou um gerenciador de pacotes de sua preferência)
